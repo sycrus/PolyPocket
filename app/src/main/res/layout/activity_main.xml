@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MAIN ACTIVITY"
+        android:gravity="center"
+        />
+
+    <ImageView
+        android:id="@+id/display_image"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        />
+    <EditText
+        android:id="@+id/edit_text_display_name"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/display_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Login Email"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/display_UID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="User ID"
+        android:gravity="center"
+        />
+    <Button
+        android:id="@+id/btnSaveChanges"
+        android:text="Save Changes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+    <Button
+        android:id="@+id/btnLogOut"
+        android:text="logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+
+</LinearLayout>
