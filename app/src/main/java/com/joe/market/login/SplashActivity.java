@@ -1,8 +1,10 @@
-package com.example.joe.market;
+package com.joe.market.login;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.joe.market.R;
 
 public class SplashActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.joe.market;
+package com.joe.market.login;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.joe.market.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,6 +26,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.joe.market.R;
 
 import java.io.IOException;
 
@@ -37,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText editTextDisplayName;
     TextView displayEmail, displayUID;
     ImageView displayImage;
-    Button btnLogOut, btnSaveChanges;
     String mDisplayName;
 
     Uri uriProfileImage;
@@ -56,14 +57,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         displayUID = (TextView) findViewById(R.id.display_UID);
         displayEmail = (TextView) findViewById(R.id.display_email);
 
-        btnLogOut = (Button) findViewById(R.id.btnLogOut);
-        btnSaveChanges = (Button) findViewById(R.id.btnSaveChanges);
-
+        //btnLogOut = (Button) findViewById(R.id.btnLogOut);
+        //btnSaveChanges = (Button) findViewById(R.id.btnSaveChanges);
 
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.btnLogOut).setOnClickListener(this);
+        findViewById(R.id.btnProceed).setOnClickListener(this);
         findViewById(R.id.btnSaveChanges).setOnClickListener(this);
+
         findViewById(R.id.display_image).setOnClickListener(this);
         findViewById(R.id.edit_text_display_name).setOnClickListener(this);
         loadUserInformation();
@@ -80,18 +82,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnLogOut:
                 logOutUser();
                 break;
+            case R.id.btnProceed:
+                proceed();
+                break;
         }
     }
-    public void saveChanges() {
+    public void savePic() {
+        //upload everything to database
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+
+            if (profileImageUrl != null) {
+                ;
+                UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
+                        .setPhotoUri(Uri.parse(profileImageUrl))
+                        .build();
+
+                user.updateProfile(profile)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    //Toast.makeText(getApplicationContext(), "Profile Updated", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        }
+    }
+    public void saveName() {
         //upload everything to database
         FirebaseUser user = mAuth.getCurrentUser();
         mDisplayName = editTextDisplayName.getText().toString().trim();
 
         if (user != null) {
-            if (profileImageUrl != null) {
-                Toast.makeText(getApplicationContext(), "Saving image", Toast.LENGTH_SHORT).show();
+            if (mDisplayName != null) {
                 UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
-                        .setPhotoUri(Uri.parse(profileImageUrl))
                         .setDisplayName(mDisplayName)
                         .build();
 
@@ -100,18 +127,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(getApplicationContext(), "Profile Updated", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(), "Profile Updated", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
             }
         }
     }
+    public void saveChanges() {
+        //upload everything to database
+        saveName();
+        savePic();
+        Toast.makeText(getApplicationContext(), "Profile Updated", Toast.LENGTH_SHORT).show();
+    }
+
     public void logOutUser() {
         mAuth.signOut();
         finish();
         startActivity(new Intent(getApplicationContext(),LogInActivity.class));
 
+    }
+
+    public void proceed() {
+        finish();
+        startActivity(new Intent(getApplicationContext(), com.joe.market.poly.MainActivity.class));
     }
 
     private void loadUserInformation() {
@@ -166,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
     private void uploadImageToFirebaseStorage() {
         StorageReference profileImageRef =
                 FirebaseStorage.getInstance().getReference("profilepics/" + System.currentTimeMillis() + ".jpg");
@@ -178,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @SuppressWarnings("VisibleForTests")
                             Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-                            Toast.makeText(getApplicationContext(), "Success uploading pic", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Success uploading pic", Toast.LENGTH_SHORT).show();
                             profileImageUrl = downloadUrl.toString();
                         }
                     })
